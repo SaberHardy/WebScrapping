@@ -1,18 +1,21 @@
 from urllib.request import urlopen
 
-url = "http://olympus.realpython.org/profiles/poseidon"
+url = "http://olympus.realpython.org/profiles/dionysus"
 
 page = urlopen(url)
-html_bytes = page.read()
-
-html_page = html_bytes.decode("utf-8")
-start_title_index = html_page.find('title') + len("<title>")
-
-end_title_index = html_page.find("</title>")
+html_page = page.read().decode("utf-8")
 
 print(html_page)
 
-print("The Title starting from: ", start_title_index)
-print("The Title end in: ", end_title_index)
+strings = ['Name: ', 'Hometown: ', 'Favorite animal: ', 'Favorite Color: ']
 
-print(f"Page Title is: {html_page[start_title_index: end_title_index]}")
+for string in strings:
+    string_start_idx = html_page.find(string)
+    text_start_idx = string_start_idx + len(string)
+
+    next_html_tag_offset = html_page[text_start_idx:].find("<")
+    text_end_idx = text_start_idx + next_html_tag_offset
+
+    raw_text = html_page[text_start_idx: text_end_idx]
+    clean_text = raw_text.strip(" \r\n\t")
+    print('clean text: ', clean_text)
